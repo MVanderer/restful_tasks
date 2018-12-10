@@ -41,7 +41,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n<h1>Hello</h1>\n<p>{{ num }}</p>\n\n"
+module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n<h1>Restful Tasks API</h1>\n<h2>{{ title[0] }}</h2>\n\n<p>{{ tasks }}</p>\n\n<ul>\n  <li *ngFor=\"let task of tasks\">{{ task['title'] }} - {{ task['description'] }}</li>\n</ul>\n\n<h2>{{ title [1] }}</h2>\n<ul>\n  <li *ngIf=\"long\">{{ tasks[2].title }} - {{ tasks[2].description }}</li>\n</ul>\n\n"
 
 /***/ }),
 
@@ -64,11 +64,28 @@ __webpack_require__.r(__webpack_exports__);
 var AppComponent = /** @class */ (function () {
     function AppComponent(_taskService) {
         this._taskService = _taskService;
-        this.title = 'public';
+        this.title = ['All the tasks', 'The third task'];
+        this.long = false;
+        this.tasks = [];
     }
     AppComponent.prototype.ngOnInit = function () {
         console.log('hi');
-        this.num = 7;
+        this.getTasksFromService();
+    };
+    AppComponent.prototype.getTasksFromService = function () {
+        var _this = this;
+        var tempObservable = this._taskService.getAllTasks();
+        tempObservable.subscribe(function (data) {
+            console.log("Here are the tasks: ", data);
+            for (var i in data) {
+                _this.tasks.push(data[i]);
+            }
+            if (_this.tasks.length > 2) {
+                _this.long = true;
+            }
+            //this.tasks = data['tasks'];
+            console.log(_this.tasks);
+        });
     };
     AppComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -149,12 +166,10 @@ __webpack_require__.r(__webpack_exports__);
 var TaskService = /** @class */ (function () {
     function TaskService(_http) {
         this._http = _http;
-        this.getAllTasks();
         this.getOneTask("5c094b2775c04ac5004f5820");
     }
     TaskService.prototype.getAllTasks = function () {
-        var tempObservable = this._http.get('/tasks');
-        tempObservable.subscribe(function (data) { return console.log("Here are the tasks: ", data); });
+        return this._http.get('/tasks');
     };
     TaskService.prototype.getOneTask = function (id) {
         var tempObservable = this._http.get("/tasks/" + id);

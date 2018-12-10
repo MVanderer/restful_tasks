@@ -1,4 +1,15 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<h1>Hello</h1>
-<p>{{ num }}</p>
+<h1>Restful Tasks API</h1>
+<h2>{{ title[0] }}</h2>
+
+<p>{{ tasks }}</p>
+
+<ul>
+  <li *ngFor="let task of tasks">{{ task['title'] }} - {{ task['description'] }}</li>
+</ul>
+
+<h2>{{ title [1] }}</h2>
+<ul>
+  <li *ngIf="long">{{ tasks[2].title }} - {{ tasks[2].description }}</li>
+</ul>
 
